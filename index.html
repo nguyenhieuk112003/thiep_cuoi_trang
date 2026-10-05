@@ -1419,7 +1419,7 @@ div[style*="ladipage.svg"] {
 window.RSVP_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyuT1yqV2XfSGoW42_4RnMR5Ij-qrBbburadsXC1TzAUZK8eJk5Ur9R8m_aFvO1KRDl/exec'; 
 
 (function() {
-  const RSVP_STORAGE_KEY = 'wedding_rsvp_nam_trang';
+  const RSVP_STORAGE_KEY = 'wedding_rsvp_ha_trang';
 
   function getStoredRSVP() {
     try {
@@ -1513,7 +1513,11 @@ window.RSVP_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyuT1yqV
 
     if (!name) return;
 
+    const targetSheet = 'Danh sách tham dự nhà Trang';
+
     const record = {
+      sheet: targetSheet,
+      sheetName: targetSheet,
       name: name,
       phone: '',
       attending: attending,
@@ -1525,7 +1529,10 @@ window.RSVP_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyuT1yqV
     // Tự động gửi tới Google Sheets Webhook nếu được cấu hình
     if (window.RSVP_GOOGLE_SHEET_URL && window.RSVP_GOOGLE_SHEET_URL.startsWith('http')) {
       try {
-        fetch(window.RSVP_GOOGLE_SHEET_URL, {
+        const separator = window.RSVP_GOOGLE_SHEET_URL.includes('?') ? '&' : '?';
+        const postUrl = window.RSVP_GOOGLE_SHEET_URL + separator + 'sheet=' + encodeURIComponent(targetSheet);
+
+        fetch(postUrl, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
